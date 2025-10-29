@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,16 +24,27 @@ class ProductRepoTest {
     }
 
     @org.junit.jupiter.api.Test
-    void getProductById() {
+    void getProductById_existingProduct_returnsProduct() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
 
         //WHEN
-        Product actual = repo.getProductById("1");
+        Product actual = repo.getProductById("1")
+                .orElseThrow(() -> new ProductNotFoundException("1"));
 
         //THEN
         Product expected = new Product("1", "Apfel");
         assertEquals(actual, expected);
+    }
+
+    @Test
+    void getProductById_notExistingProduct_throwsProductNotFoundException() {
+        ProductRepo repo = new ProductRepo();
+
+        assertThrows(ProductNotFoundException.class, () -> repo.getProductById("2501")
+        .orElseThrow(() -> new ProductNotFoundException("2501")));
+
+
     }
 
     @org.junit.jupiter.api.Test
@@ -46,7 +59,7 @@ class ProductRepoTest {
         //THEN
         Product expected = new Product("2", "Banane");
         assertEquals(actual, expected);
-        assertEquals(repo.getProductById("2"), expected);
+        assertEquals(repo.getProductById("2").orElseThrow(), expected);
     }
 
     @org.junit.jupiter.api.Test
@@ -58,6 +71,6 @@ class ProductRepoTest {
         repo.removeProduct("1");
 
         //THEN
-        assertNull(repo.getProductById("1"));
+        assertTrue(repo.getProductById("1").isEmpty());
     }
 }
