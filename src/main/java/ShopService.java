@@ -6,7 +6,7 @@ public class ShopService {
     private ProductRepo productRepo = new ProductRepo();
     private OrderRepo orderRepo = new OrderMapRepo();
 
-    public Order addOrder(List<String> productIds) {
+    public Order addOrder(List<String> productIds) throws ProductNotFoundException {
         List<Product> products = new ArrayList<>();
         for (String productId : productIds) {
             Product productToOrder = productRepo.getProductById(productId)
@@ -35,4 +35,14 @@ public class ShopService {
 
     }
 
+    public Order updateOrder(String orderId, OrderStatus newStatus) throws OrderNotFoundException {
+        Order currentOrder = orderRepo.getOrderById(orderId);
+        if (currentOrder == null) {
+            throw new OrderNotFoundException(orderId);
+        }
+        Order updatedOrder = new Order(currentOrder.withStatus(newStatus));
+        orderRepo.removeOrder(currentOrder.id());
+        orderRepo.addOrder(updatedOrder);
+        return updatedOrder;
+    }
 }
