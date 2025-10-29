@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +24,11 @@ public class ShopService {
             products.add(productToOrder);
         }
 
-        Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING);
+        Order newOrder = new Order(UUID.randomUUID().toString(),
+                products,
+                OrderStatus.PROCESSING
+        //        Instant.now()
+        );
 
         return orderRepo.addOrder(newOrder);
     }
@@ -40,9 +45,10 @@ public class ShopService {
         if (currentOrder == null) {
             throw new OrderNotFoundException(orderId);
         }
-        Order updatedOrder = new Order(currentOrder.withStatus(newStatus));
-        orderRepo.removeOrder(currentOrder.id());
-        orderRepo.addOrder(updatedOrder);
-        return updatedOrder;
+
+        orderRepo.removeOrder(orderId);
+
+        orderRepo.addOrder(currentOrder.withStatus(newStatus));
+        return currentOrder;
     }
 }
