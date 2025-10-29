@@ -17,8 +17,16 @@ public class ShopService {
             products.add(productToOrder);
         }
 
-        Order newOrder = new Order(UUID.randomUUID().toString(), products);
+        Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING);
 
         return orderRepo.addOrder(newOrder);
     }
+
+    public List<Order> getOrdersByStatus(OrderStatus status){
+        List<Order> ordersWithStatus = orderRepo.getOrders().stream()
+                .filter(order -> order.status() == status)
+                .toList();
+        return ordersWithStatus;
+    }
+
 }
