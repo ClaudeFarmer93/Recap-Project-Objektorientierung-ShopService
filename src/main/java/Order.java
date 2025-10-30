@@ -9,8 +9,8 @@ import java.util.List;
 public record Order(
         String id,
         List<Product> products,
-        @With OrderStatus status
-        //@With Instant orderTime
+        @With OrderStatus status,
+        @With Instant orderTime
         ) {
 }
 

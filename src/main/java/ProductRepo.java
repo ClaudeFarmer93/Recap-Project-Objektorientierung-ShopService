@@ -22,7 +22,13 @@ public class ProductRepo {
         }
         return Optional.empty();
     }
-
+    /*
+    public Optional<Product> getProductbyIdByStream(String id) {
+        return products.stream()
+                .filter(product -> product.id().equals(id))
+                .findFirst();
+    }
+*/
     public Product addProduct(Product newProduct) {
         products.add(newProduct);
         return newProduct;
